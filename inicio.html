@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <style>
+        /* Similar al código anterior */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 2em;
+            border-radius: 10px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 1000px;
+            height: auto;
+            position: relative;
+        }
+        .logo {
+            margin-bottom: 1em;
+            position: relative;
+            display: inline-block;
+        }
+        .logo img {
+            max-width: 100px;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            animation: logoAnimation 3s ease-in-out infinite;
+        }
+        @keyframes logoAnimation {
+            0% {
+                transform: scale(1) rotate(0deg);
+            }
+            50% {
+                transform: scale(1.1) rotate(10deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+        }
+        canvas {
+            width: 100%;
+            height: 120px;
+            background-color: #ffffff;
+            margin-bottom: 1.5em;
+        }
+        .login-form {
+            margin-top: 1em;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 0.75em;
+            margin: 0.5em 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        button {
+            background-color: #556B2F;
+            color: #ffffff;
+            border: none;
+            padding: 0.75em 1.5em;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #4a5d23;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="logo">
+        <img src="logo.png" alt="Logo">
+    </div>
+    
+    <canvas id="textCanvas"></canvas>
+
+    <div class="login-form">
+        <form id="loginForm">
+            <input type="text" id="id" name="id" placeholder="ID" required>
+            <input type="password" id="clave" name="clave" placeholder="Clave" required>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('textCanvas');
+    const ctx = canvas.getContext('2d');
+    const scale = window.devicePixelRatio;
+    canvas.width = window.innerWidth * scale;
+    canvas.height = 120 * scale;
+    ctx.scale(scale, scale);
+
+    const text = "INDUSTRIAS TOBIAS A FAMILY COMPANY";
+    const duration = 3000;
+    const totalFrames = 100;
+
+    function drawText(timestamp) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.font = "36px Arial";
+        ctx.fillStyle = "#556B2F";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        const x = canvas.width / 2 / scale;
+        const y = canvas.height / 2 / scale;
+        const visibleLength = Math.min(text.length, (timestamp / duration) * text.length);
+        ctx.fillText(text.substring(0, visibleLength), x, y);
+
+        if (timestamp < duration) {
+            requestAnimationFrame(drawText);
+        }
+    }
+
+    requestAnimationFrame(drawText);
+
+    // Validación del formulario
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const id = document.getElementById('id').value;
+        const clave = document.getElementById('clave').value;
+
+        // Credenciales de ejemplo
+        const validId = '2005';
+        const validClave = '2024';
+
+        if (id === validId && clave === validClave) {
+            sessionStorage.setItem('loggedIn', 'true');
+            window.location.href = 'menu.html'; // Redirige a menu.html si las credenciales son correctas
+        } else {
+            alert('ID o clave incorrectos'); // Mensaje de error si las credenciales son incorrectas
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Principal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background: #f5f5f5; /* Fondo gris claro */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative; /* Necesario para el posicionamiento absoluto del botón */
+        }
+        .header {
+            position: absolute;
+            top: 1em;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #3e5f40; /* Verde oliva oscuro */
+            font-size: 2.5em; /* Tamaño del título */
+            font-weight: bold; /* Fuente en negrita */
+            text-transform: uppercase; /* Texto en mayúsculas */
+            letter-spacing: 1px; /* Espaciado de letras */
+        }
+        .container {
+            background-color: #ffffff; /* Fondo blanco para el contenedor */
+            padding: 2.5em; /* Más relleno */
+            border-radius: 12px; /* Bordes redondeados */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Sombra más pronunciada */
+            width: 90%;
+            max-width: 700px; /* Ancho máximo del contenedor aumentado */
+            text-align: center;
+        }
+        .menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adaptación a diferentes tamaños de pantalla */
+            gap: 1.5em;
+            margin-bottom: 2em;
+        }
+        .menu a {
+            display: block;
+            background-color: #4a6a41; /* Verde oliva */
+            color: #ffffff; /* Color del texto en blanco */
+            padding: 1em;
+            border-radius: 8px; /* Bordes redondeados */
+            text-decoration: none;
+            font-size: 1.2em; /* Tamaño de fuente ajustado */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Efecto de transición */
+        }
+        .menu a:hover {
+            background-color: #3c5a34; /* Verde oliva oscuro al pasar el cursor */
+            transform: scale(1.05); /* Efecto de aumento en el botón */
+        }
+        .logout {
+            position: absolute;
+            top: 1em;
+            right: 1em;
+            width: 50px; /* Ancho del botón circular */
+            height: 50px; /* Alto del botón circular */
+            border-radius: 50%; /* Hacer el botón circular */
+            background-color: #ffffff; /* Fondo blanco */
+            border: 2px solid #4a6a41; /* Borde verde oliva */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .logout img {
+            width: 24px; /* Ajusta el tamaño de la imagen dentro del botón */
+            height: 24px;
+        }
+        .logout:hover {
+            background-color: #f5f5f5; /* Fondo gris claro al pasar el cursor */
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">INDUSTRIAS TOBIAS</div>
+<div class="container">
+    <div class="menu">
+        <a href="compra.html">Compra</a>
+        <a href="venta.html">Venta</a>
+        <a href="inventario.html">Inventario</a>
+        <a href="Traslados.html">Traslados</a>
+        <a href="ajustes.html">Ajustes</a>
+        <a href="factura.html">Factura</a> <!-- Nueva opción agregada -->
+    </div>
+    <a href="inicio.html" class="logout" onclick="sessionStorage.removeItem('loggedIn');">
+        <img src="cerrar.png" alt="Cerrar Sesión">
+    </a>
+</div>
+
+<script>
+    // Previene el retroceso en el navegador
+    (function() {
+        window.history.pushState(null, "", window.location.href);
+        window.onpopstate = function() {
+            window.history.go(1);
+        };
+    })();
+    
+    // Verifica si el usuario está autenticado
+    function checkAuthentication() {
+        if (sessionStorage.getItem('loggedIn') !== 'true') {
+            window.location.href = 'inicio.html';
+        }
+    }
+
+    window.onload = function() {
+        checkAuthentication();
+    };
+</script>
+
+</body>
+</html>

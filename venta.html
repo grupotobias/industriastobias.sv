@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .header {
+            background-color: #fff;
+            color: #333;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 18px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid #ddd;
+        }
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+        .sales-table {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            overflow-x: auto;
+        }
+        .sales-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .sales-table th, .sales-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .sales-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        .sales-table button {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .sales-table button:hover {
+            background-color: #e53935;
+        }
+        .export-buttons {
+            margin-bottom: 20px;
+        }
+        .export-buttons button {
+            margin-right: 10px;
+        }
+    </style>
+    <!-- Carga de la librería SheetJS -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.17.3/package/dist/xlsx.full.min.js"></script>
+</head>
+<body>
+
+<div class="header">
+    Ventas
+</div>
+
+<div class="container">
+    <div class="sales-table">
+        <div class="export-buttons">
+            <button onclick="exportToExcel()">Exportar a Excel</button>
+        </div>
+        <table id="salesTable">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Código</th>
+                    <th>Precio</th>
+                    <th>Descripción</th>
+                    <th>Categoría</th>
+                    <th>Cantidad Vendida</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="salesList">
+                <!-- Las filas de ventas se llenarán dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const salesList = document.getElementById('salesList');
+
+        // Función para cargar los datos de las ventas desde localStorage
+        function loadSales() {
+            const soldItems = JSON.parse(localStorage.getItem('soldItems')) || [];
+
+            salesList.innerHTML = soldItems.map((item, index) => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.code}</td>
+                    <td>${item.price}</td>
+                    <td>${item.description}</td>
+                    <td>${item.category}</td>
+                    <td>${item.quantity}</td>
+                    <td>
+                        <button onclick="removeItem(${index})">Eliminar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Función para eliminar un ítem de las ventas
+        window.removeItem = function(index) {
+            let soldItems = JSON.parse(localStorage.getItem('soldItems')) || [];
+            soldItems.splice(index, 1);
+            localStorage.setItem('soldItems', JSON.stringify(soldItems));
+            loadSales();
+        };
+
+        loadSales();
+    });
+
+    // Función para exportar la tabla a un archivo Excel
+    function exportToExcel() {
+        const table = document.getElementById('salesTable');
+        if (table) {
+            try {
+                // Convertir la tabla HTML a una hoja de trabajo de Excel
+                const ws = XLSX.utils.table_to_sheet(table);
+                // Crear un nuevo libro de trabajo
+                const wb = XLSX.utils.book_new();
+                // Agregar la hoja de trabajo al libro de trabajo
+                XLSX.utils.book_append_sheet(wb, ws, "Ventas");
+                // Escribir el libro de trabajo a un archivo Excel
+                XLSX.writeFile(wb, "Ventas.xlsx");
+            } catch (error) {
+                console.error("Error al exportar a Excel:", error);
+            }
+        } else {
+            console.error("No se encontró la tabla para exportar.");
+        }
+    }
+</script>
+
+</body>
+</html>
